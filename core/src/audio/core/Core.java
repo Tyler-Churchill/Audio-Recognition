@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.musicg.wave.Wave;
 
 public class Core extends ApplicationAdapter {
 
@@ -28,8 +29,8 @@ public class Core extends ApplicationAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		if (Gdx.input.isKeyJustPressed(Keys.SPACE)) {
-			rec.record(analyzer);
-
+			Wave w = rec.record(analyzer);
+			System.out.println("Recorded hash: " + Analyzer.computeHash(Analyzer.getKeyPoints(w)));
 		}
 		
 		if (Gdx.input.isKeyJustPressed(Keys.B)) {
@@ -53,6 +54,17 @@ public class Core extends ApplicationAdapter {
 
 
 /**
+ * 
+ * 
+ * 	
+		 * recorder.read(pcm, 0, pcm.length); byte[] b = new byte[pcm.length];
+		 * for(int x = 0; x < pcm.length; x++) b[x] = (byte) pcm[x]; InputStream
+		 * in = new ByteArrayInputStream(b); Wave w = new Wave(in);
+		 * analyzer.getFingerprint(w); return analyzer.getFingerprint(w);
+		 *
+ * 
+ * 
+ * 
  * recorder.read(pcm, 0, pcm.length);
  * 
  * renderer.begin(ShapeType.Line); renderer.setColor(1,1,0,1); int

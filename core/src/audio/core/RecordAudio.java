@@ -19,12 +19,17 @@ import com.musicg.wave.Wave;
 
 public class RecordAudio {
 
-	private final int RECORD_TIME = 6000;
+	private final int RECORD_TIME = 8000;
 
 	private TargetDataLine line;
 	private int fileN = 0;
-	private final String temp = Gdx.files.internal("tmp/").path();
+	private final String temp = "D:/Audio Recoginition/Gradle/android/assets/tmp/";
 	
+	/**
+	 * Records audio from the microphone either on desktop or android
+	 * @param analyzer
+	 * @return
+	 */
 	public Wave record(Analyzer analyzer) {
 		if (Gdx.app.getType() == ApplicationType.Desktop) {
 			Thread stopper = new Thread(new Runnable() {
@@ -66,32 +71,16 @@ public class RecordAudio {
 				ioe.printStackTrace();
 			}
 
-			/// TESTTTTTTTT
 			Wave w = new Wave(path);
-			Wave x = new Wave("D:/Audio Recoginition/Gradle/android/assets/files/Get Out.wav");
-			FingerprintSimilarity s = Analyzer.getSimilarity(w, x);
-			
-			System.out.println("clip is found at "
-					+ s.getsetMostSimilarTimePosition() + "s in "
-					+ "get out with similarity " + s.getSimilarity());
-			// END TEST
-			
-			
 			return w;
 		}
 		
 		return null;
-		
-
-		/**
-		 * recorder.read(pcm, 0, pcm.length); byte[] b = new byte[pcm.length];
-		 * for(int x = 0; x < pcm.length; x++) b[x] = (byte) pcm[x]; InputStream
-		 * in = new ByteArrayInputStream(b); Wave w = new Wave(in);
-		 * analyzer.getFingerprint(w); return analyzer.getFingerprint(w);
-		 **/
-
 	}
 
+	/**
+	 * Finish recording / close input streams
+	 */
 	public void finish() {
 		line.stop();
         line.close();
@@ -99,21 +88,26 @@ public class RecordAudio {
         System.out.println("Finished");
 	}
 	
+	/**
+	 * Deletes temporary files used when recording
+	 */
 	public void cleanUpTemp() {
 		FileHandle h = new FileHandle(temp);
 		FileHandle all[] = h.list();
 		for(FileHandle x : all)
 			x.delete();
 	}
-		
+	
+	/**
+	 * Gets the audio format we wish to record in
+	 * @return
+	 */
 	private AudioFormat getFormat() {
-		float sampleRate = 22050;
+		float sampleRate = 44100;
 		int sampleSizeInBits = 8;
-		int channels = 2; // mono
+		int channels = 2; 
 		boolean signed = true;
-		boolean bigEndian = true;
+		boolean bigEndian = false;
 		return new AudioFormat(sampleRate, sampleSizeInBits, channels, signed, bigEndian);
 	}
-	
-
 }
