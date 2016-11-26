@@ -19,7 +19,7 @@ import com.musicg.wave.Wave;
 
 public class RecordAudio {
 
-	private final int RECORD_TIME = 8000;
+	private final int RECORD_TIME = 4500;
 
 	private TargetDataLine line;
 	private int fileN = 0;
@@ -105,9 +105,9 @@ public class RecordAudio {
 	private AudioFormat getFormat() {
 		float sampleRate = 44100;
 		int sampleSizeInBits = 8;
-		int channels = 2; 
+		int channels = 1; 
 		boolean signed = true;
-		boolean bigEndian = false;
+		boolean bigEndian = true;
 		return new AudioFormat(sampleRate, sampleSizeInBits, channels, signed, bigEndian);
 	}
 }

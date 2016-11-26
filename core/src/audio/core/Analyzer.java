@@ -2,10 +2,9 @@ package audio.core;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.List;
 
 import com.musicg.fingerprint.FingerprintManager;
-import com.musicg.fingerprint.FingerprintSimilarity;
 import com.musicg.wave.Wave;
 import com.musicg.wave.extension.Spectrogram;
 
@@ -15,15 +14,15 @@ public class Analyzer {
 	private static Spectrogram spec;
 
 	public static final int ERROR_FACTOR = 2;
-	public final static int LOWER_LIMIT = 10;
-	public final static int UPPER_LIMIT = 256;
+	public final static int LOWER_LIMIT = 30;
+	public final static int UPPER_LIMIT = 255;
 
-	public static final int[] RANGE = new int[] {40, 80, 120, 180, UPPER_LIMIT};
+	public static final int[] RANGE = new int[] {50, 80, 120, 180, UPPER_LIMIT + 1};
 
 	public Analyzer() {
 		manager = new FingerprintManager();
 	}
-
+	
 	public static byte[] getFingerprint(Wave wave) {
 		return manager.extractFingerprint(wave);
 	}
@@ -47,47 +46,45 @@ public class Analyzer {
 	 * @param w
 	 * @return
 	 */
-	public static long[] getKeyPoints(Wave w) {
+	public static List<SongPoint> getKeyPoints(int songID, Wave w) {
 		spec = new Spectrogram(w);
+
 		// double[frame][freq]
 		// double[size.numFrames][size.numFrequencyUnit]
 		double data[][] = spec.getAbsoluteSpectrogramData();
-		long keyPoints[] = new long[5];
-
+		List<SongPoint> pointsList = new ArrayList<SongPoint>();
+		int points[][] = null;
+		
 		for (int x = 0; x < spec.getNumFrames(); x++) {
 			// holds frequency
 			double temp[] = new double[spec.getNumFrequencyUnit()];
 			int highScore[] = new int[5];
-			int points[] = new int[5];
+			points = new int[spec.getNumFrames()][5];
 
 			for (int y = LOWER_LIMIT; y < spec.getNumFrequencyUnit(); y++) {
 				temp[y] = data[x][y];
-
-				int mag = (log(temp[y], 2));
+			
+				int mag = log(temp[y], 2);
 				int index = getIndex(y);
-
+				
 				if (mag > highScore[index]) {
 					highScore[index] = mag;
-					points[index] = y;
+					points[x][index] = y;
 				}
 			}
-			for (int n = 0; n < points.length; n++)
-			{
-				keyPoints[n] = points[n];
-			}
+			
+			int h = computeHash(points[x][0], points[x][1], points[x][2], points[x][3]);
+			SongPoint p = new SongPoint(songID, x, h);
+			pointsList.add(p);
 		}
-		return keyPoints;
-	}
-	
-	public static long computeHash(long[] keyPoints) {
-			long p1 = keyPoints[0];
-			long p2 = keyPoints[1];
-			long p3 = keyPoints[2];
-			long p4 = keyPoints[3];
-		 return  (p4-(p4%ERROR_FACTOR)) * 100000000 + (p3-(p3%ERROR_FACTOR)) * 100000 + (p2-(p2%ERROR_FACTOR)) * 100 + (p1-(p1%ERROR_FACTOR));
+		return pointsList;
 	}
 	
 	
+	public static int computeHash(int p1, int p2, int p3, int p4) {
+		
+		 return  (p4-(p4%ERROR_FACTOR)) * 1000000  + (p3-(p3%ERROR_FACTOR)) * 10000  + (p2-(p2%ERROR_FACTOR)) * 100 + (p1-(p1%ERROR_FACTOR));
+	}
 	
 	static int log(double temp, int base)
 	{

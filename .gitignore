@@ -1,5 +1,7 @@
 ## Java
 
+dir_to_ignore/
+
 *.class
 *.war
 *.ear
@@ -22,6 +24,7 @@ android/libs/armeabi/
 android/libs/armeabi-v7a/
 android/libs/x86/
 android/gen/
+android/assets/
 .idea/
 *.ipr
 *.iws

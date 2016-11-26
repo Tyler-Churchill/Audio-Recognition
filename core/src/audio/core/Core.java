@@ -30,7 +30,7 @@ public class Core extends ApplicationAdapter {
 
 		if (Gdx.input.isKeyJustPressed(Keys.SPACE)) {
 			Wave w = rec.record(analyzer);
-			System.out.println("Recorded hash: " + Analyzer.computeHash(Analyzer.getKeyPoints(w)));
+			database.search(w);
 		}
 		
 		if (Gdx.input.isKeyJustPressed(Keys.B)) {
