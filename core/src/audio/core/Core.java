@@ -13,6 +13,7 @@ public class Core extends ApplicationAdapter {
 	private Database database;
 	private RecordAudio rec;
 	private Analyzer analyzer;
+
 	
 	@Override
 	public void create() {
@@ -32,9 +33,17 @@ public class Core extends ApplicationAdapter {
 			Wave w = rec.record(analyzer);
 			database.search(w);
 		}
+	
+		
+		if (Gdx.input.isKeyJustPressed(Keys.U)) {
+			Wave w = new Wave("D:/Audio Recoginition/Gradle/android/assets/files/ACant Sleep.wav");
+			database.search(w);
+		}
+
 		
 		if (Gdx.input.isKeyJustPressed(Keys.B)) {
 			database.rebuildDatabase();
+			//database.buildSQL();
 		}
 
 	}
@@ -51,34 +60,3 @@ public class Core extends ApplicationAdapter {
 		
 	}
 }
-
-
-/**
- * 
- * 
- * 	
-		 * recorder.read(pcm, 0, pcm.length); byte[] b = new byte[pcm.length];
-		 * for(int x = 0; x < pcm.length; x++) b[x] = (byte) pcm[x]; InputStream
-		 * in = new ByteArrayInputStream(b); Wave w = new Wave(in);
-		 * analyzer.getFingerprint(w); return analyzer.getFingerprint(w);
-		 *
- * 
- * 
- * 
- * recorder.read(pcm, 0, pcm.length);
- * 
- * renderer.begin(ShapeType.Line); renderer.setColor(1,1,0,1); int
- * offset = 5; int prevX = 0; int prevY = 0;
- * 
- * 
- * for (short e : pcm) { int d = e % 50; renderer.line(prevX, prevY,
- * prevX+offset, d); prevX = prevX + offset; prevY = d; }
- * 
- * 
- * 
- * renderer.end();
- * 
- * 
- * // spawn fft analyze thread and analyze incoming data and get results
- * from the result pool
- **/

@@ -19,7 +19,7 @@ import com.musicg.wave.Wave;
 
 public class RecordAudio {
 
-	private final int RECORD_TIME = 4500;
+	private final int RECORD_TIME = 20000;
 
 	private TargetDataLine line;
 	private int fileN = 0;

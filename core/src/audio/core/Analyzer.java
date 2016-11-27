@@ -13,11 +13,13 @@ public class Analyzer {
 	private static FingerprintManager manager;
 	private static Spectrogram spec;
 
-	public static final int ERROR_FACTOR = 2;
-	public final static int LOWER_LIMIT = 30;
+	public static final int ERROR_FACTOR = 1;
+	public final static int LOWER_LIMIT = 10;
 	public final static int UPPER_LIMIT = 255;
 
-	public static final int[] RANGE = new int[] {50, 80, 120, 180, UPPER_LIMIT + 1};
+	//public static final int[] RANGE = new int[] {45, 80, 120, 180, UPPER_LIMIT + 1};
+	
+	public static final int[] RANGE = new int[] {70, 120, 180, 220, UPPER_LIMIT + 1};
 
 	public Analyzer() {
 		manager = new FingerprintManager();
@@ -73,16 +75,25 @@ public class Analyzer {
 				}
 			}
 			
+			int time =  x / spec.getFramesPerSecond();
+			
 			int h = computeHash(points[x][0], points[x][1], points[x][2], points[x][3]);
-			SongPoint p = new SongPoint(songID, x, h);
+			SongPoint p = new SongPoint(songID, time, h);
 			pointsList.add(p);
 		}
 		return pointsList;
 	}
 	
-	
+	/**
+	 * Computes a hash from 4 frequency keypoints in a single frame
+	 * with added error padding
+	 * @param p1
+	 * @param p2
+	 * @param p3
+	 * @param p4
+	 * @return
+	 */
 	public static int computeHash(int p1, int p2, int p3, int p4) {
-		
 		 return  (p4-(p4%ERROR_FACTOR)) * 1000000  + (p3-(p3%ERROR_FACTOR)) * 10000  + (p2-(p2%ERROR_FACTOR)) * 100 + (p1-(p1%ERROR_FACTOR));
 	}
 	
@@ -97,12 +108,8 @@ public class Analyzer {
 			i++;
 		return i;
 	}
-
 	
 	public static int getHash(Object[] bs) {
 		return Arrays.deepHashCode(bs);
 	}
-	
-
-	
 }
