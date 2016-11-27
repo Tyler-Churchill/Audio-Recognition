@@ -78,7 +78,7 @@ public class Analyzer {
 			int time =  x / spec.getFramesPerSecond();
 			
 			int h = computeHash(points[x][0], points[x][1], points[x][2], points[x][3]);
-			SongPoint p = new SongPoint(songID, time, h);
+			SongPoint p = new SongPoint(songID, time);
 			pointsList.add(p);
 		}
 		return pointsList;

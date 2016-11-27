@@ -1,7 +1,9 @@
 package audio.core;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
@@ -12,14 +14,12 @@ public class SQLDatabase {
 	private Connection c = null;
 
 	public SQLDatabase() {
-
 		try {
 			c = DriverManager.getConnection(location);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 	}
 
 	public void insertIntoSongList(int id, String title) {
@@ -82,20 +82,55 @@ public class SQLDatabase {
 
 	}
 	
-	
-	public void createTables() {
-		/** c = DriverManager.getConnection(location);
-		System.out.println("Opened connection to SQLDatabase successfully");
-		stmt = c.createStatement();
-		String createSongTable = "CREATE TABLE SONG_LIST " + "(ID INT PRIMARY KEY    NOT NULL," + "TITLE      TEXT     NOT NULL)";
-		stmt.executeUpdate(createSongTable);
-		stmt.close();
+	public void checkTables() {
+		
+		
+		
+		try {
+			c = DriverManager.getConnection(location);
 
-		stmt = c.createStatement();
-		String createSongPointTable = "CREATE TABLE SONG_POINT " + "(HASH INT PRIMARY KEY    NOT NULL," + "SID INT   NOT NULL," + "TIME INT    NOT NULL," + "FOREIGN KEY(SID) REFERENCES SONG_LIST(ID))";
-		stmt.executeUpdate(createSongPointTable);
-		stmt.close();
-		c.close(); **/
+			Statement stmt;
+			
+			DatabaseMetaData meta = c.getMetaData();
+			ResultSet r = meta.getTables(null, null, "SONG_POINT", null);
+			if(r.next()) {
+				System.out.println("[SQLITE] SONG_POINT EXIST");
+				// table exists
+				stmt = c.createStatement();
+				String check = "DROP TABLE SONG_POINT;";
+				stmt.executeQuery(check);
+				stmt.close();
+			} else { 
+				System.out.println("[SQLITE] SONG_POINT NOT EXIST");
+				stmt = c.createStatement();
+				String createSongPointTable = "CREATE TABLE SONG_POINT " + "(HASH INT    NOT NULL,"
+						+ "SID INT   NOT NULL," + "TIME INT    NOT NULL," + "FOREIGN KEY(SID) REFERENCES SONG_LIST(ID))";
+				stmt.executeUpdate(createSongPointTable);
+				stmt.close();
+			}
+			
+			ResultSet n = meta.getTables(null, null, "SONG_LIST", null);
+			if(n.next()) {
+				System.out.println("[SQLITE] SONG_LIST EXISTS");
+				// table exists
+				stmt = c.createStatement();
+				String check = "DROP TABLE IF SONG_LIST;";
+				stmt.executeQuery(check);
+				stmt.close();
+			} else { 
+				System.out.println("[SQLITE] SONG_LIST NOT EXIST");
+				stmt = c.createStatement();
+				String createSongTable = "CREATE TABLE SONG_LIST " + "(ID INT PRIMARY KEY    NOT NULL,"
+						+ "TITLE      TEXT     NOT NULL)";
+				stmt.executeUpdate(createSongTable);
+				stmt.close();
+			}
+			n.close();
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	

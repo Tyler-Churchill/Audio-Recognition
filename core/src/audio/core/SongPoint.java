@@ -5,7 +5,7 @@ public class SongPoint {
 	int songID;
 	Integer hash;
 
-	public SongPoint(int songID, int time, int hash) {
+	public SongPoint(int songID, int time) {
 		this.time = time;
 		this.songID = songID;
 		this.hash = hash;

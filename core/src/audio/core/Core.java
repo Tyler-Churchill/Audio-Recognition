@@ -33,20 +33,18 @@ public class Core extends ApplicationAdapter {
 			Wave w = rec.record(analyzer);
 			database.search(w);
 		}
-	
+
+		if (Gdx.input.isKeyJustPressed(Keys.S)) {
+			database.save();
+		}
 		
-		if (Gdx.input.isKeyJustPressed(Keys.U)) {
-			Wave w = new Wave("D:/Audio Recoginition/Gradle/android/assets/files/ACant Sleep.wav");
-			database.search(w);
+		if (Gdx.input.isKeyJustPressed(Keys.L)) {
+			database.load();
 		}
 
-		
 		if (Gdx.input.isKeyJustPressed(Keys.B)) {
-			database.rebuildDatabase();
-			
-			//database.buildSQL();
+			database.rebuildInternal();
 		}
-
 	}
 
 	@Override
