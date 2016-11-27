@@ -14,7 +14,6 @@ import javax.sound.sampled.TargetDataLine;
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.musicg.fingerprint.FingerprintSimilarity;
 import com.musicg.wave.Wave;
 
 public class RecordAudio {

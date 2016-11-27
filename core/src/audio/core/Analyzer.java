@@ -61,7 +61,7 @@ public class Analyzer {
 			// holds frequency
 			double temp[] = new double[spec.getNumFrequencyUnit()];
 			int highScore[] = new int[5];
-			points = new int[spec.getNumFrames()][5];
+			points = new int[spec.getNumFrames()][5]; // this is what is making the program slow
 
 			for (int y = LOWER_LIMIT; y < spec.getNumFrequencyUnit(); y++) {
 				temp[y] = data[x][y];
@@ -82,6 +82,36 @@ public class Analyzer {
 			pointsList.add(p);
 		}
 		return pointsList;
+	}
+	
+	public static boolean test(int songID, Wave w) {
+		long startTime = System.currentTimeMillis();
+		
+		
+		spec = new Spectrogram(w);
+
+		// double[frame][freq]
+		// double[size.numFrames][size.numFrequencyUnit]
+		double data[][] = spec.getAbsoluteSpectrogramData();
+		List<SongPoint> pointsList = new ArrayList<SongPoint>();
+	
+		
+		for (int x = 0; x < spec.getNumFrames(); x++) {
+			// holds frequency
+			double temp[] = new double[spec.getNumFrequencyUnit()];
+			int highScore[] = new int[5];
+			int points[][] = new int[spec.getNumFrames()][5]; 
+
+			
+			
+			int time =  x / spec.getFramesPerSecond();
+			
+		}
+		// Run some code;
+		long stopTime = System.currentTimeMillis();
+		System.out.println("Elapsed time was " + (stopTime - startTime) + " miliseconds.");
+		
+		return true;
 	}
 	
 	/**

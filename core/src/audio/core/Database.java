@@ -30,7 +30,6 @@ public class Database {
 	private SQLDatabase sql;
 	
 	
-	
 	public Database() {
 		fileFolder = new FileHandle(AUDIO_FOLDER);
 		songData = new HashMap<Integer, List<SongPoint>>();
@@ -52,35 +51,38 @@ public class Database {
 			List<SongPoint> p = Analyzer.getKeyPoints(nSongs, w);
 			nSongs++;
 
-		
 			for (SongPoint n : p) {
-			
 				if ((points = songData.get(n.hash)) == null) {
-					System.out.println("New hash found: " + n.hash);
+					//System.out.println("New hash found: " + n.hash);
 					points = new ArrayList<SongPoint>();
 					points.add(n);
 					songData.put(n.hash, points);
 				} else {
-					System.out.println("Existing hash found: " + n.hash);
+					//System.out.println("Existing hash found: " + n.hash);
 					points.add(n);
 				}
-				System.out.println("Points: " + points.size());
+				//System.out.println("Points: " + points.size());
 			}
 
 			System.out.print("finished processing");
 		}
 		
-		System.out.println("\n\nDatabase rebuilt! (Hashmap size: " + songData.size() + ")");
+		System.out.println("\n\nDatabase rebuilt! (Hashmap size: " + songData.size()+ ")");
 		
 		return true;
 	}
 	
-	
-	
-	
-	
-	
-	
+	public boolean test() {
+		FileHandle[] i = fileFolder.list();
+		List<SongPoint> points = null;
+		for (FileHandle e : i) {
+			System.out.print("\nFound file: " + e.name() + " Song ID: " + nSongs + " .....");
+			Wave w = new Wave(e.path());
+			Analyzer.test(nSongs, w);
+		}
+				
+		return true;
+	}
 	
 	
 	public void buildSQL() {
@@ -103,30 +105,20 @@ public class Database {
 
 	
 	public void search(Wave w) {
-		
 		List<SongPoint> p = Analyzer.getKeyPoints(nSongs, w);
 		matchMap = new HashMap<Integer, Map<Integer, Integer>>();
-		
 		for (SongPoint sp : p) {
 			List<SongPoint> list;
 			if ((list = songData.get(sp.hash)) != null) {
-		
-				
 				for (SongPoint tp : list) {
-					
 					Map<Integer, Integer> temp = null;
 					int off = Math.abs(tp.time - sp.time);
-					
-				 
-					System.out.println("SID " + tp.songID);
 					if ((temp = this.matchMap.get(tp.songID)) == null) {
 						temp = new HashMap<Integer, Integer>();
 						temp.put(off, 1);
-						System.out.println("ADDED TO MATCHMAP: " + tp.songID + " TEMP" + temp);
+						//System.out.println("ADDED TO MATCHMAP: " + tp.songID + " TEMP" + temp);
 						matchMap.put(tp.songID, temp);
-						
 					} else {
-						
 						Integer count = temp.get(off);
 						if (count == null) {
 							temp.put(off, new Integer(1));
@@ -137,14 +129,11 @@ public class Database {
 				}
 			}
 		}
-		
 		int bestSong = -1;
 		int bestCount = 0;
-		
 		for (int x = 0; x < nSongs; x++) {
 			int bestCountForSong = 0;
 			Map<Integer, Integer> tmpMap = matchMap.get(x);
-			
 			if(tmpMap != null)
 			for (Map.Entry<Integer, Integer> e : tmpMap.entrySet()) {
 				if (e.getValue() > bestCountForSong) {
@@ -160,9 +149,7 @@ public class Database {
 			
 			System.out.println("SongID = " + x + " Score: " +  bestCountForSong);
 		}
-	
 		System.out.println("\n\nBest guess song: " + bestSong);
-		
 	} 
 	
 	public void insert() {

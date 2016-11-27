@@ -43,6 +43,7 @@ public class Core extends ApplicationAdapter {
 		
 		if (Gdx.input.isKeyJustPressed(Keys.B)) {
 			database.rebuildDatabase();
+			
 			//database.buildSQL();
 		}
 
