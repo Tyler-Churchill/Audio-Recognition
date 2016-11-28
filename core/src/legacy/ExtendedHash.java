@@ -1,4 +1,4 @@
-package audio.database;
+package legacy;
 
 public class ExtendedHash {
 

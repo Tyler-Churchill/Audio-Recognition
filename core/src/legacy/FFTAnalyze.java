@@ -1,4 +1,4 @@
-package workingfiles;
+package legacy;
 
 import com.badlogic.gdx.Gdx;
 

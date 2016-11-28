@@ -17,9 +17,7 @@ public class Analyzer {
 	public final static int LOWER_LIMIT = 10;
 	public final static int UPPER_LIMIT = 255;
 
-	//public static final int[] RANGE = new int[] {45, 80, 120, 180, UPPER_LIMIT + 1};
-	
-	public static final int[] RANGE = new int[] {70, 120, 180, 220, UPPER_LIMIT + 1};
+	public static final int[] RANGE = new int[] {40, 80, 120, 160, UPPER_LIMIT + 1};
 
 	public Analyzer() {
 		manager = new FingerprintManager();
@@ -55,13 +53,14 @@ public class Analyzer {
 		// double[size.numFrames][size.numFrequencyUnit]
 		double data[][] = spec.getAbsoluteSpectrogramData();
 		List<SongPoint> pointsList = new ArrayList<SongPoint>();
-		int points[][] = null;
+		
+		int points[][] = new int[spec.getNumFrames()][5];
 		
 		for (int x = 0; x < spec.getNumFrames(); x++) {
 			// holds frequency
 			double temp[] = new double[spec.getNumFrequencyUnit()];
 			int highScore[] = new int[5];
-			points = new int[spec.getNumFrames()][5]; // this is what is making the program slow
+			 // this is what is making the program slow
 
 			for (int y = LOWER_LIMIT; y < spec.getNumFrequencyUnit(); y++) {
 				temp[y] = data[x][y];
@@ -75,44 +74,15 @@ public class Analyzer {
 				}
 			}
 			
-			int time =  x / spec.getFramesPerSecond();
-			
+			//int time =  x / spec.getFramesPerSecond();
+			int time =  x;
 			int h = computeHash(points[x][0], points[x][1], points[x][2], points[x][3]);
-			SongPoint p = new SongPoint(songID, time);
+			SongPoint p = new SongPoint(songID, time, h);
 			pointsList.add(p);
 		}
 		return pointsList;
 	}
 	
-	public static boolean test(int songID, Wave w) {
-		long startTime = System.currentTimeMillis();
-		
-		
-		spec = new Spectrogram(w);
-
-		// double[frame][freq]
-		// double[size.numFrames][size.numFrequencyUnit]
-		double data[][] = spec.getAbsoluteSpectrogramData();
-		List<SongPoint> pointsList = new ArrayList<SongPoint>();
-	
-		
-		for (int x = 0; x < spec.getNumFrames(); x++) {
-			// holds frequency
-			double temp[] = new double[spec.getNumFrequencyUnit()];
-			int highScore[] = new int[5];
-			int points[][] = new int[spec.getNumFrames()][5]; 
-
-			
-			
-			int time =  x / spec.getFramesPerSecond();
-			
-		}
-		// Run some code;
-		long stopTime = System.currentTimeMillis();
-		System.out.println("Elapsed time was " + (stopTime - startTime) + " miliseconds.");
-		
-		return true;
-	}
 	
 	/**
 	 * Computes a hash from 4 frequency keypoints in a single frame

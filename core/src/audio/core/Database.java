@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Scanner;
 
 import com.badlogic.gdx.files.FileHandle;
@@ -17,24 +16,20 @@ import com.musicg.wave.Wave;
 public class Database {
 
 	private final String AUDIO_FOLDER = "D:/Audio Recoginition/Gradle/android/assets/files";
+	private final String SONG_DATA = "D:/Audio Recoginition/Gradle/android/assets/song_data.txt";
+	private final String SONG_NAMES = "D:/Audio Recoginition/Gradle/android/assets/song_names.txt";
+	
 	private FileHandle fileFolder;
-
 	private Map<Integer, String> songName;
 	private HashMap<Integer, List<SongPoint>> songData;
 	private Map<Integer, Map<Integer, Integer>> matchMap;
-
 	private static int nSongs = 0;
-	
-	private SQLDatabase sql;
-	
-	private final String SONG_DATA = "D:/Audio Recoginition/Gradle/android/assets/song_data.txt";
-	private final String SONG_NAMES = "D:/Audio Recoginition/Gradle/android/assets/song_names.txt";
+
 	
 	public Database() {
 		fileFolder = new FileHandle(AUDIO_FOLDER);
 		songData = new HashMap<Integer, List<SongPoint>>();
 		songName = new HashMap<Integer, String>();
-		sql = new SQLDatabase();
 	}
 
 	/**
@@ -69,48 +64,57 @@ public class Database {
 			b.flush();
 			b.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
 	public void load() {
+		// Load song id's and song names
 		System.out.println("Loading database.... ");
 		try {
 			File f = new File(SONG_NAMES);
 			Scanner s = new Scanner(f);
-			s.useDelimiter("\\s+");
-			while(s.hasNext()) {
-				int i = 0;
+			s.useDelimiter("\\d+");
+			int i = 0;	
+			while (s.hasNext()) {
 				String n = null;
-				if(s.hasNextInt()) {
-					i = s.nextInt();
-				} else {
-					n = s.next();
-				}
+				n = s.next();
+				System.out.print("I : " + i + "name: " + n);
 				songName.put(i, n);
+				i++;
 			}
+			nSongs = songName.size();
 			s.close();
 			System.out.println("Loaded song id's and song names...");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
+		// load song data
 		try {
 			File f = new File(SONG_DATA);
 			Scanner s = new Scanner(f);
-			s.useDelimiter("\\s+");
-			while(s.hasNext()) {
-			
+			s.useDelimiter("([^0-9]+)");
+			List<SongPoint> list;
+			while (s.hasNextLine()) {
+				s.skip("\\d{0,10}");
+				list = new ArrayList<SongPoint>();
+				if(s.hasNextInt()) {	
+					int id = s.nextInt();
+					int t = s.nextInt();
+					int h = s.nextInt();
+					SongPoint p = new SongPoint(id, t, h);
+					list.add(p);
+					songData.put(p.hash, list);
+					s.nextLine();
+				}
 			}
 			s.close();
 			System.out.println("Loaded song data...");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println("Finished loading! (Hashmap size: " + songData.size()+ ")");
+		System.out.println("Finished loading! (Hashmap size: " + songData.size() + ")");
 	}
 
 	/**
@@ -143,12 +147,13 @@ public class Database {
 			System.out.print("finished processing");
 		}
 		System.out.println("\n\nDatabase rebuilt! (Hashmap size: " + songData.size()+ ")");
+		save();
 		return true;
 	}
 	
-	
-	
-	public void buildSQL() {
+	/** NOT IMPLEMENTED 
+	 * 
+	 * public void buildSQL() {
 		//sql.deleteAllSongList();
 		//sql.deleteAllSongPoint();
 		//sql.checkTables();
@@ -161,13 +166,8 @@ public class Database {
 			for(SongPoint n : p)
 				songData.put(n.hash, p);
 			nSongs++;
-
-			for (Entry<Integer, List<SongPoint>> n : songData.entrySet()) {
-				sql.insertSongData(n.getValue());
-			}
-			
 		} 
-	}
+	} **/
 	
 	public void search(Wave w) {
 		List<SongPoint> p = Analyzer.getKeyPoints(nSongs, w);
@@ -210,7 +210,7 @@ public class Database {
 				bestCount = bestCountForSong;
 				bestSong = x;
 			}
-			System.out.println("SongID = " + x + " Score: " +  bestCountForSong);
+			System.out.print(songName.get(x) + " Score: " +  bestCountForSong + "\n");
 		}
 		System.out.println("\n\nBest guess song: " + bestSong);
 	} 

@@ -1,4 +1,4 @@
-package audio.database;
+package legacy;
 
 public class BTree<Key extends Comparable<Key>, Value>  {
     // max children per B-tree node = M-1

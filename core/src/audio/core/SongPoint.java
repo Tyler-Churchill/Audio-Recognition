@@ -1,11 +1,11 @@
 package audio.core;
 
 public class SongPoint {
-	int time; //
-	int songID;
-	Integer hash;
+	public int time; //
+	public int songID;
+	public Integer hash;
 
-	public SongPoint(int songID, int time) {
+	public SongPoint(int songID, int time, int hash) {
 		this.time = time;
 		this.songID = songID;
 		this.hash = hash;

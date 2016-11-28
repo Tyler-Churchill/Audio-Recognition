@@ -30,14 +30,10 @@ public class Core extends ApplicationAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		if (Gdx.input.isKeyJustPressed(Keys.SPACE)) {
-			Wave w = rec.record(analyzer);
+			Wave w = new Wave("D:/Audio Recoginition/Gradle/android/assets/files/PolarBear-Puscifer.wav");
 			database.search(w);
 		}
 
-		if (Gdx.input.isKeyJustPressed(Keys.S)) {
-			database.save();
-		}
-		
 		if (Gdx.input.isKeyJustPressed(Keys.L)) {
 			database.load();
 		}

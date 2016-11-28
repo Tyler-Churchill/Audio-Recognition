@@ -18,7 +18,7 @@ import com.musicg.wave.Wave;
 
 public class RecordAudio {
 
-	private final int RECORD_TIME = 20000;
+	private final int RECORD_TIME = 15000;
 
 	private TargetDataLine line;
 	private int fileN = 0;
@@ -83,7 +83,7 @@ public class RecordAudio {
 	public void finish() {
 		line.stop();
         line.close();
-        cleanUpTemp();
+       // cleanUpTemp();
         System.out.println("Finished");
 	}
 	

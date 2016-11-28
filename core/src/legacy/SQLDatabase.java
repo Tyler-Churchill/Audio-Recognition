@@ -1,4 +1,4 @@
-package audio.core;
+package legacy;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -7,6 +7,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
+
+import audio.core.SongPoint;
+
 
 public class SQLDatabase {
 
