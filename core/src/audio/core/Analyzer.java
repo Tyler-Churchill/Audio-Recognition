@@ -48,13 +48,11 @@ public class Analyzer {
 	 */
 	public static List<SongPoint> getKeyPoints(int songID, Wave w) {
 		spec = new Spectrogram(w);
-
+		System.out.println("samplesize: " + spec.getFftSampleSize());
 		// double[frame][freq]
 		// double[size.numFrames][size.numFrequencyUnit]
 		double data[][] = spec.getAbsoluteSpectrogramData();
-		
 		List<SongPoint> pointsList = new ArrayList<SongPoint>();
-		
 		int points[][] = new int[spec.getNumFrames()][5];
 		
 		for (int x = Settings.SONG_START; x < spec.getNumFrames(); x++) {
@@ -62,8 +60,6 @@ public class Analyzer {
 			double temp[] = new double[spec.getNumFrequencyUnit()];
 			int highScore[] = new int[5];
 			 // this is what is making the program slow
-		
-
 			for (int y = LOWER_LIMIT; y < spec.getNumFrequencyUnit(); y++) {
 				temp[y] = data[x][y];
 			
@@ -76,8 +72,9 @@ public class Analyzer {
 				}
 			}
 			
-			int time =  x / spec.getFramesPerSecond();
-			//int time =  x;
+			//int time =  x / spec.getFramesPerSecond();
+			int time =  x;
+			
 			int h = computeHash(points[x][0], points[x][1], points[x][2], points[x][3]);
 			SongPoint p = new SongPoint(songID, time, h);
 			pointsList.add(p);

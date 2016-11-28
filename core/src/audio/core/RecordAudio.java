@@ -57,9 +57,10 @@ public class RecordAudio {
 					System.out.println("Line not supported");
 					System.exit(0);
 				}
-				line = (TargetDataLine) AudioSystem.getLine(info);
+				line = AudioSystem.getTargetDataLine(format);
 				line.open(format);
 				line.start(); 
+				
 				System.out.println("Start capturing...");
 				AudioInputStream ais = new AudioInputStream(line);
 				System.out.println("Start recording...");
@@ -103,7 +104,7 @@ public class RecordAudio {
 	 */
 	private AudioFormat getFormat() {
 		float sampleRate = 44100;
-		int sampleSizeInBits = 8;
+		int sampleSizeInBits = 16;
 		int channels = 1; 
 		boolean signed = true;
 		boolean bigEndian = true;

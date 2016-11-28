@@ -1,6 +1,7 @@
 package audio.core;
 
 import java.io.File;
+import java.util.List;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -22,10 +23,11 @@ public class Core extends ApplicationAdapter {
 	private RecordAudio rec;
 	private GraphicRender render;
 
-	private final String SPECTROGRAM_LOCATION = "D:/Audio Recoginition/Gradle/android/assets/spectrogram.jpg";
+	private final String SPECTROGRAM_LOCATION = "D:/Audio Recoginition/Gradle/android/assets/spectrograms/rec_spectrogram.jpg";
 	private Texture tex;
 	private SpriteBatch batch;
 	private ShapeRenderer shape;
+	private NewRecord nRec;
 	
 	@Override
 	public void create() {
@@ -36,6 +38,7 @@ public class Core extends ApplicationAdapter {
 		render = new GraphicRender();
 		batch = new SpriteBatch();
 		shape = new ShapeRenderer();
+		nRec = new NewRecord();
 	}
 
 	@Override
@@ -43,21 +46,34 @@ public class Core extends ApplicationAdapter {
 		Gdx.gl.glClearColor(0, 0, 0.2f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		// TEST
-		if (Gdx.input.isKeyJustPressed(Keys.T)) {
-			Wave w = new Wave("D:/Audio Recoginition/Gradle/android/assets/files/BattleRoyal-DopeDOD.wav");
-			database.search(w);
-			render.renderSpectrogram(w.getSpectrogram(), SPECTROGRAM_LOCATION);
-		}
-		
-		// TEST
+
+	
 		if (Gdx.input.isKeyJustPressed(Keys.SPACE)) {
-			Wave w = rec.record();
+			Wave w = nRec.record();
 			database.search(w);
+		
+			render.renderWaveform(w, "D:/Audio Recoginition/Gradle/android/assets/spectrograms/rec_wave.jpg");
 			render.renderSpectrogram(w.getSpectrogram(), SPECTROGRAM_LOCATION);
 			tex = new Texture(new FileHandle(new File(SPECTROGRAM_LOCATION)));
-			
+		
 		}
+		
+		/** 
+		 * Test real files
+		 */
+		if (Gdx.input.isKeyJustPressed(Keys.Q)) {
+			FileHandle fileFolder = new FileHandle(Settings.AUDIO_FILES_LOC);
+			FileHandle[] i = fileFolder.list();
+			// Go through every file in our directory
+			for (FileHandle e : i) {
+				
+				System.out.println("\n\nFILENAME: " + e.name());
+				Wave w = new Wave(e.path());
+				database.search(w);
+			}
+		
+		}
+		
 		if (Gdx.input.isKeyJustPressed(Keys.S)) {
 			database.save();
 		}
@@ -71,7 +87,6 @@ public class Core extends ApplicationAdapter {
 		}
 		
 		if(tex != null) {
-			
 			
 			batch.begin();
 			batch.draw(tex, 0, 0);
