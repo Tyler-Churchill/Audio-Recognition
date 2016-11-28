@@ -15,9 +15,9 @@ import com.musicg.wave.Wave;
 
 public class Database {
 
-	private final String AUDIO_FOLDER = "D:/Audio Recoginition/Gradle/android/assets/files";
-	private final String SONG_DATA = "D:/Audio Recoginition/Gradle/android/assets/song_data.txt";
-	private final String SONG_NAMES = "D:/Audio Recoginition/Gradle/android/assets/song_names.txt";
+	private final String AUDIO_FOLDER = Settings.AUDIO_FILES_LOC;
+	private final String SONG_DATA = Settings.DATABASE_LOC + "song_data.txt";
+	private final String SONG_NAMES = Settings.DATABASE_LOC + "song_names.txt";
 	
 	private FileHandle fileFolder;
 	private Map<Integer, String> songName;
@@ -79,38 +79,40 @@ public class Database {
 			while (s.hasNext()) {
 				String n = null;
 				n = s.next();
-				System.out.print("I : " + i + "name: " + n);
+				System.out.print("ID : " + i + " Title: " + n);
 				songName.put(i, n);
 				i++;
 			}
 			nSongs = songName.size();
 			s.close();
-			System.out.println("Loaded song id's and song names...");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
+		System.out.println("Loading all relevant data...");
 		// load song data
 		try {
 			File f = new File(SONG_DATA);
 			Scanner s = new Scanner(f);
-			s.useDelimiter("([^0-9]+)");
 			List<SongPoint> list;
 			while (s.hasNextLine()) {
-				s.skip("\\d{0,10}");
+				String line = s.nextLine();
+				Scanner lineScanner = new Scanner(line);
+				lineScanner.useDelimiter("([^0-9]+)");
+				lineScanner.skip("\\d{0,10}");
 				list = new ArrayList<SongPoint>();
-				if(s.hasNextInt()) {	
-					int id = s.nextInt();
-					int t = s.nextInt();
-					int h = s.nextInt();
+				int curHash = 0;
+				while(lineScanner.hasNextInt()) {	
+					int id = lineScanner.nextInt();
+					int t = lineScanner.nextInt();
+					int h = lineScanner.nextInt();
 					SongPoint p = new SongPoint(id, t, h);
 					list.add(p);
-					songData.put(p.hash, list);
-					s.nextLine();
+					curHash = p.hash;
 				}
+				lineScanner.close();
+				songData.put(curHash, list);
 			}
 			s.close();
-			System.out.println("Loaded song data...");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -170,6 +172,7 @@ public class Database {
 	} **/
 	
 	public void search(Wave w) {
+		long startTime = System.currentTimeMillis();
 		List<SongPoint> p = Analyzer.getKeyPoints(nSongs, w);
 		matchMap = new HashMap<Integer, Map<Integer, Integer>>();
 		for (SongPoint sp : p) {
@@ -210,9 +213,10 @@ public class Database {
 				bestCount = bestCountForSong;
 				bestSong = x;
 			}
-			System.out.print(songName.get(x) + " Score: " +  bestCountForSong + "\n");
+			System.out.print(songName.get(x) + "Score: " +  bestCountForSong + "\n");
 		}
-		System.out.println("\n\nBest guess song: " + bestSong);
+		long endTime = System.currentTimeMillis();
+		System.out.println("\n\nBest guess" + songName.get(bestSong) + "(search took" + (endTime - startTime) + "ms)");
 	} 
 }
 

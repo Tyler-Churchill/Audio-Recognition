@@ -13,12 +13,12 @@ public class Analyzer {
 	private static FingerprintManager manager;
 	private static Spectrogram spec;
 
-	public static final int ERROR_FACTOR = 1;
-	public final static int LOWER_LIMIT = 10;
-	public final static int UPPER_LIMIT = 255;
+	public static final int ERROR_FACTOR = Settings.ERROR_FACTOR;
+	public final static int LOWER_LIMIT = Settings.LOWER_LIMIT;
+	public final static int UPPER_LIMIT = Settings.UPPER_LIMIT;
 
-	public static final int[] RANGE = new int[] {40, 80, 120, 160, UPPER_LIMIT + 1};
-
+	//public static final int[] RANGE = new int[] {40, 80, 120, 160, UPPER_LIMIT + 1};
+	public static final int[] RANGE = Settings.FILTER_BANK;
 	public Analyzer() {
 		manager = new FingerprintManager();
 	}
@@ -52,15 +52,17 @@ public class Analyzer {
 		// double[frame][freq]
 		// double[size.numFrames][size.numFrequencyUnit]
 		double data[][] = spec.getAbsoluteSpectrogramData();
+		
 		List<SongPoint> pointsList = new ArrayList<SongPoint>();
 		
 		int points[][] = new int[spec.getNumFrames()][5];
 		
-		for (int x = 0; x < spec.getNumFrames(); x++) {
+		for (int x = Settings.SONG_START; x < spec.getNumFrames(); x++) {
 			// holds frequency
 			double temp[] = new double[spec.getNumFrequencyUnit()];
 			int highScore[] = new int[5];
 			 // this is what is making the program slow
+		
 
 			for (int y = LOWER_LIMIT; y < spec.getNumFrequencyUnit(); y++) {
 				temp[y] = data[x][y];
@@ -74,8 +76,8 @@ public class Analyzer {
 				}
 			}
 			
-			//int time =  x / spec.getFramesPerSecond();
-			int time =  x;
+			int time =  x / spec.getFramesPerSecond();
+			//int time =  x;
 			int h = computeHash(points[x][0], points[x][1], points[x][2], points[x][3]);
 			SongPoint p = new SongPoint(songID, time, h);
 			pointsList.add(p);

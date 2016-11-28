@@ -18,7 +18,7 @@ import com.musicg.wave.Wave;
 
 public class RecordAudio {
 
-	private final int RECORD_TIME = 15000;
+	private final int RECORD_TIME = Settings.RECORDING_TIME;
 
 	private TargetDataLine line;
 	private int fileN = 0;
@@ -29,7 +29,7 @@ public class RecordAudio {
 	 * @param analyzer
 	 * @return
 	 */
-	public Wave record(Analyzer analyzer) {
+	public Wave record() {
 		if (Gdx.app.getType() == ApplicationType.Desktop) {
 			Thread stopper = new Thread(new Runnable() {
 				public void run() {
@@ -83,7 +83,7 @@ public class RecordAudio {
 	public void finish() {
 		line.stop();
         line.close();
-       // cleanUpTemp();
+       cleanUpTemp();
         System.out.println("Finished");
 	}
 	
