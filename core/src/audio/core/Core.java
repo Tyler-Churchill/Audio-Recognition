@@ -1,7 +1,6 @@
 package audio.core;
 
 import java.io.File;
-import java.util.List;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -20,7 +19,6 @@ public class Core extends ApplicationAdapter {
 
 	private OrthographicCamera camera;
 	private Database database;
-	private RecordAudio rec;
 	private GraphicRender render;
 
 	private final String SPECTROGRAM_LOCATION = "D:/Audio Recoginition/Gradle/android/assets/spectrograms/rec_spectrogram.jpg";
@@ -34,7 +32,6 @@ public class Core extends ApplicationAdapter {
 		camera = new OrthographicCamera(1, Gdx.graphics.getHeight()/Gdx.graphics.getWidth());
 		camera.update();
 		database = new Database();
-		rec = new RecordAudio();
 		render = new GraphicRender();
 		batch = new SpriteBatch();
 		shape = new ShapeRenderer();
@@ -46,16 +43,12 @@ public class Core extends ApplicationAdapter {
 		Gdx.gl.glClearColor(0, 0, 0.2f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-
-	
 		if (Gdx.input.isKeyJustPressed(Keys.SPACE)) {
 			Wave w = nRec.record();
 			database.search(w);
-		
 			render.renderWaveform(w, "D:/Audio Recoginition/Gradle/android/assets/spectrograms/rec_wave.jpg");
 			render.renderSpectrogram(w.getSpectrogram(), SPECTROGRAM_LOCATION);
 			tex = new Texture(new FileHandle(new File(SPECTROGRAM_LOCATION)));
-		
 		}
 		
 		/** 

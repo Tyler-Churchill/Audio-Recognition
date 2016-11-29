@@ -1,4 +1,4 @@
-package audio.core;
+package legacy;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,6 +15,8 @@ import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.musicg.wave.Wave;
+
+import audio.core.Settings;
 
 public class RecordAudio {
 
@@ -84,7 +86,7 @@ public class RecordAudio {
 	public void finish() {
 		line.stop();
         line.close();
-       cleanUpTemp();
+    //   cleanUpTemp();
         System.out.println("Finished");
 	}
 	

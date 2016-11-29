@@ -25,7 +25,6 @@ public class Database {
 	private Map<Integer, Map<Integer, Integer>> matchMap;
 	private static int nSongs = 0;
 
-	
 	public Database() {
 		fileFolder = new FileHandle(AUDIO_FOLDER);
 		songData = new HashMap<Integer, List<SongPoint>>();
@@ -68,6 +67,9 @@ public class Database {
 		}
 	}
 
+	/**
+	 * loads already processed audio data
+	 */
 	public void load() {
 		// Load song id's and song names
 		System.out.println("Loading database.... ");
@@ -171,6 +173,10 @@ public class Database {
 		} 
 	} **/
 	
+	/**
+	 * Search by a recorded Wav.file through our processed audio in the database
+	 * @param w
+	 */
 	public void search(Wave w) {
 		long startTime = System.currentTimeMillis();
 		List<SongPoint> p = Analyzer.getKeyPoints(nSongs, w);
