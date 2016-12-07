@@ -45,8 +45,6 @@ public class NewRecord {
 	
 	public Wave record() {
 	
-		audioLine = null;
-		format = null;
 		
 		Thread stopper = new Thread(new Runnable() {
 			public void run() {
@@ -73,7 +71,7 @@ public class NewRecord {
 			e.printStackTrace();
 		}
 		System.out.println("Stopped recording...");
-			return save();
+		return save();
 	
 	}
 	
@@ -121,10 +119,9 @@ public class NewRecord {
 	public void stop() throws IOException {
 		isRunning = false;
 		
-		if (audioLine != null) {
-			audioLine.drain();
-			audioLine.close();
-		}
+
+		audioLine.stop();
+		audioLine.close();
 	}
 	
 	

@@ -204,8 +204,11 @@ public class Database {
 			}
 		}
 		// now find best matches from our match map which has our recorded audio data
+		
+		Map<Integer, String> songs = new HashMap<Integer, String>();
 		int bestSong = -1;
 		int bestCount = 0;
+		int total = 0;
 		for (int x = 0; x < nSongs; x++) {
 			int bestCountForSong = 0;
 			Map<Integer, Integer> tmpMap = matchMap.get(x);
@@ -218,11 +221,31 @@ public class Database {
 			if (bestCountForSong > bestCount) {
 				bestCount = bestCountForSong;
 				bestSong = x;
+				total++;
 			}
-			System.out.print(songName.get(x) + "Score: " +  bestCountForSong + "\n");
+			//System.out.print(songName.get(x) + "Score: " +  bestCountForSong + "\n");
 		}
 		long endTime = System.currentTimeMillis();
+		
+		
+		int c = bestCount; // our answer
+
+	
+		int conf = (c / total);
+		
 		System.out.println("\n\nBest guess" + songName.get(bestSong) + "(search took" + (endTime - startTime) + "ms)");
+		System.out.println("Confidence: " + conf);
 	} 
+	
+	
+	public void activeSearch(Wave w) {
+		Map<Integer, String> songs = new HashMap<Integer, String>();
+		
+		
+		
+		
+		
+		
+	}
 }
 

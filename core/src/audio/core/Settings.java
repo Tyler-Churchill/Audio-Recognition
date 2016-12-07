@@ -6,7 +6,7 @@ public class Settings {
 	
 	public static String AUDIO_FILES_LOC = "D:/Audio Recoginition/Gradle/android/assets/files/";
 	
-	public static int RECORDING_TIME = 3000;
+	public static int RECORDING_TIME = 10000;
 	
 	public final static int LOWER_LIMIT = 10;
 	

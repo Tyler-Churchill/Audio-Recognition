@@ -106,7 +106,7 @@ public class RecordAudio {
 	 */
 	private AudioFormat getFormat() {
 		float sampleRate = 44100;
-		int sampleSizeInBits = 16;
+		int sampleSizeInBits = 8;
 		int channels = 1; 
 		boolean signed = true;
 		boolean bigEndian = true;

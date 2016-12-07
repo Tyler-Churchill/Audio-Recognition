@@ -15,6 +15,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.musicg.wave.Wave;
 
+import legacy.RecordAudio;
+
 public class Core extends ApplicationAdapter {
 
 	private OrthographicCamera camera;
@@ -26,6 +28,7 @@ public class Core extends ApplicationAdapter {
 	private SpriteBatch batch;
 	private ShapeRenderer shape;
 	private NewRecord nRec;
+	private RecordAudio rec;
 	
 	@Override
 	public void create() {
@@ -36,10 +39,11 @@ public class Core extends ApplicationAdapter {
 		batch = new SpriteBatch();
 		shape = new ShapeRenderer();
 		nRec = new NewRecord();
+		rec = new RecordAudio();
 	}
 
 	@Override
-	public void render() {
+	public void render() { 
 		Gdx.gl.glClearColor(0, 0, 0.2f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
