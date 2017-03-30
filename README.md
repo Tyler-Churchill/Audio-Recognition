@@ -10,7 +10,7 @@ MUSICG (https://code.google.com/archive/p/musicg/downloads)
 
 ![Entry](Slides/1.png)
 ![Entry](Slides/2.png)
-![Entry](Slides/3png)
+![Entry](Slides/3.png)
 ![Entry](Slides/4.png)
 ![Entry](Slides/5.png)
 ![Entry](Slides/6.png)
